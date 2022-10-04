@@ -1,8 +1,9 @@
-Shader "Hidden/NewImageEffectShader"
+Shader "MandelbrotShaders/NewImageEffectShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Area("Area", vector) = (0, 0, 4, 4)
     }
     SubShader
     {
@@ -37,14 +38,21 @@ Shader "Hidden/NewImageEffectShader"
                 return o;
             }
 
+            float4 _Area;
             sampler2D _MainTex;
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // just invert the colors
-                col.rgb = 1 - col.rgb;
-                return col;
+                float2 c = _Area.xy + (i.uv - .5) * _Area.zw;
+                float2 z;
+                float iter;
+
+                for (iter= 0; iter < 255; iter++) {
+                    z = float2(z.x*z.x-z.y*z.y, 2*z.x*z.y) + c;
+                    if (length(z) > 2) break;
+                }
+
+                return iter / 255;
             }
             ENDCG
         }
