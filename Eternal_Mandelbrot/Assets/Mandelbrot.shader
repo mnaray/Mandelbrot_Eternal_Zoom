@@ -47,12 +47,12 @@ Shader "MandelbrotShaders/NewImageEffectShader"
                 float2 z;
                 float iter;
 
-                for (iter= 0; iter < 255; iter++) {
+                for (iter= 0; iter < 500; iter++) {
                     z = float2(z.x*z.x-z.y*z.y, 2*z.x*z.y) + c;
                     if (length(z) > 2) break;
                 }
 
-                return iter / 255;
+                return iter / 500;
             }
             ENDCG
         }
