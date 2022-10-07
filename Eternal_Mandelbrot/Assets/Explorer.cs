@@ -8,12 +8,18 @@ public class Explorer : MonoBehaviour
     public Vector2 pos;
     public float scale;
 
+    private Vector2 smoothPos;
+    private float smoothScale;
+
     private void UpdateShader()
     {
+        smoothPos = Vector2.Lerp(smoothPos, pos, .08f);
+        smoothScale = Mathf.Lerp(smoothScale, scale, .08f);
+
         float aspect = (float)Screen.width / (float)Screen.height;
 
-        float scaleX = scale;
-        float scaleY = scale;
+        float scaleX = smoothScale;
+        float scaleY = smoothScale;
 
         if (aspect > 1f)
         {
@@ -24,7 +30,7 @@ public class Explorer : MonoBehaviour
             scaleX *= aspect;
         }
 
-        mat.SetVector("_Area", new Vector4(pos.x, pos.y, scaleX, scaleY));
+        mat.SetVector("_Area", new Vector4(smoothPos.x, smoothPos.y, scaleX, scaleY));
     }
 
     private void HandleInputs()
